@@ -19,4 +19,5 @@ public class ResponseData extends Response {
     public void setDataList(List<?> dataList) {
         this.dataList = dataList;
     }
+
 }

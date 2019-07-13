@@ -103,4 +103,17 @@
       add_time = #{addTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 按照用户名和密码来查询 -->
+  <select id="selectByUserNameAndPassword" resultMap="BaseResultMap">
+    select name,password from login_user where name = #{username} and password = #{password}
+  </select>
+
+  <!-- 插入用户 -->
+  <insert id="insertByUsernameAndPassword" parameterType="com.github.springbootmiaosha.entity.User">
+    insert into login_user(name, password, add_time) values (#{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+
 </mapper>
+
+

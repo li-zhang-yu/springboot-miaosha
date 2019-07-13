@@ -9,6 +9,7 @@ import java.util.Date;
  * @Date 2019-06-18
  */
 public class User {
+
     private Integer id;
 
     private String name;
@@ -19,7 +20,7 @@ public class User {
 
     private Date lastLoginTime;
 
-    private Date addTime;
+    private String addTime;
 
     public Integer getId() {
         return id;
@@ -61,11 +62,11 @@ public class User {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public Date getAddTime() {
+    public String getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(Date addTime) {
+    public void setAddTime(String addTime) {
         this.addTime = addTime;
     }
 }
