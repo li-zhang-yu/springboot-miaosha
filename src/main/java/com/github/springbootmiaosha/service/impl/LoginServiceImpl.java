@@ -6,11 +6,13 @@ import com.github.springbootmiaosha.message.request.LoginRequest;
 import com.github.springbootmiaosha.message.response.LoginResponse;
 import com.github.springbootmiaosha.service.LoginService;
 import com.github.springbootmiaosha.util.DateUtil;
+import com.github.springbootmiaosha.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 登陆接口实现类
@@ -43,7 +45,7 @@ public class LoginServiceImpl implements LoginService{
             User newUser = new User();
             newUser.setName(username);
             newUser.setPassword(password);
-            newUser.setAddTime(DateUtil.formatTime(new Date()));
+            newUser.setAddTime(new Date());
             userMapper.insertByUsernameAndPassword(newUser);
         }
         response.setCode(0);
@@ -52,7 +54,31 @@ public class LoginServiceImpl implements LoginService{
     }
 
     /**
+     * 获取用户列表
+     * @return
+     */
+    @Override
+    public PageBean<User> getUserList() {
+        List<User> dataList = userMapper.getUserList();
+        PageBean<User> pageBean = new PageBean<User>();
+        pageBean.setDataList(dataList);
+        return pageBean;
+    }
+
+    /**
+     * 通过id查找用户
+     * @param id
+     * @return
+     */
+    @Override
+    public User getUserById(Integer id) {
+        User user = userMapper.selectByPrimaryKey(id);
+        return user;
+    }
+
+    /**
      * 根据用户的ip获取用户的地址
+     *
      * @param request
      * @return
      */

@@ -1,5 +1,7 @@
 package com.github.springbootmiaosha.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -20,7 +22,7 @@ public class User {
 
     private Date lastLoginTime;
 
-    private String addTime;
+    private Date addTime;
 
     public Integer getId() {
         return id;
@@ -35,7 +37,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
     public String getPassword() {
@@ -43,7 +45,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+        this.password = password;
     }
 
     public String getSalt() {
@@ -51,7 +53,7 @@ public class User {
     }
 
     public void setSalt(String salt) {
-        this.salt = salt == null ? null : salt.trim();
+        this.salt = salt;
     }
 
     public Date getLastLoginTime() {
@@ -62,11 +64,11 @@ public class User {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public String getAddTime() {
+    public Date getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(String addTime) {
+    public void setAddTime(Date addTime) {
         this.addTime = addTime;
     }
 }

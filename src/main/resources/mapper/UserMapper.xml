@@ -114,6 +114,11 @@
     insert into login_user(name, password, add_time) values (#{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP})
   </insert>
 
+  <!--查询用户列表-->
+  <select id="getUserList" resultMap="BaseResultMap">
+     select * from login_user
+  </select>
+
 </mapper>
 
 

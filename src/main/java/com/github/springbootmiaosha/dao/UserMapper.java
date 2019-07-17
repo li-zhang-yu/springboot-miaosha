@@ -4,6 +4,8 @@ import com.github.springbootmiaosha.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 
 /**
  * 用户相关接口
@@ -39,5 +41,11 @@ public interface UserMapper {
      * @return
      */
     int insertByUsernameAndPassword(User user);
+
+    /**
+     * 获取用户列表
+     * @return
+     */
+    List<User> getUserList();
 
 }
