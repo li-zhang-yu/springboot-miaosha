@@ -28,6 +28,15 @@ public class LoginController {
     private LoginService loginService;
 
     /**
+     * 测试
+     * @return
+     */
+    @RequestMapping("/test")
+    public String test(){
+        return "hello";
+    }
+
+    /**
      * 登陆接口
      * @param request
      * @return
