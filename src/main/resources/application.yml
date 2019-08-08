@@ -21,6 +21,10 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
+    cache: false
+#  devtools:
+#    restart:
+#      exclude: templates/**,static/**
 
 
 ## Mybatis

@@ -13,6 +13,22 @@ public class ApiResponse {
     private Object data;
     private boolean more;
 
+    public ApiResponse(int code, String message, Object data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    /**
+     * 构造方法
+     * @param code
+     * @param message
+     * @return
+     */
+    public static ApiResponse ofMessage(int code, String message) {
+        return new ApiResponse(code, message, null);
+    }
+
     public int getCode() {
         return code;
     }
