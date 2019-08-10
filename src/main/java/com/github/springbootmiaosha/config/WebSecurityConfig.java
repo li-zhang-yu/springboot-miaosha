@@ -1,9 +1,9 @@
 package com.github.springbootmiaosha.config;
 
-import com.github.springbootmiaosha.security.MyPasswordEncoder;
+import com.github.springbootmiaosha.security.AuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -53,8 +53,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //就不是以明文的方式进行匹配，会报错
 //        auth.inMemoryAuthentication().withUser("admin").password("admin")
 //                .roles("ADMIN").and();
-        auth.inMemoryAuthentication().passwordEncoder(new MyPasswordEncoder()).withUser("admin").password("admin")
-                .roles("ADMIN").and();
+//        auth.inMemoryAuthentication().passwordEncoder(new MyPasswordEncoder()).withUser("admin").password("admin")
+//                .roles("ADMIN").and();
+        auth.authenticationProvider(authProvider()).eraseCredentials(true);
     }
+
+    @Bean
+    public AuthProvider authProvider(){
+        return new AuthProvider();
+    }
+
 
 }
