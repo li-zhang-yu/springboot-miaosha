@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * 后台用户控制层
+ * 后台管理员用户控制层
  *
  * @author lizhangyu
  * @Date 2019-08-08
