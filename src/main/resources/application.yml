@@ -28,9 +28,9 @@ spring:
 
 
 ## Mybatis
-mybatis:
-  mapper-locations: mapper/*.xml #xml文件
-  type-aliases-package: com.github.springbootmiaosha.entity #实体类
+#mybatis:
+#  mapper-locations: mapper/*.xml #xml文件
+#  type-aliases-package: com.github.springbootmiaosha.entity #实体类
 
 ## 日志配置
 logging:
