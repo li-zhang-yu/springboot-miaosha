@@ -51,4 +51,5 @@ public class LoginUrlEntryPoint extends LoginUrlAuthenticationEntryPoint {
         }
         return super.determineUrlToUseForThisRequest(request, response, exception);
     }
+
 }

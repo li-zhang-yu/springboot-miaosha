@@ -1,6 +1,7 @@
 package com.github.springbootmiaosha.config;
 
 import com.github.springbootmiaosha.security.AuthProvider;
+import com.github.springbootmiaosha.security.LoginAuthFailHandler;
 import com.github.springbootmiaosha.security.LoginUrlEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 // 配置角色登录处理入口
                 .loginProcessingUrl("/login")
+                .failureHandler(authFailHandler())
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -76,6 +78,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public LoginUrlEntryPoint urlEntryPoint(){
         return new LoginUrlEntryPoint("/user/login");
+    }
+
+    @Bean
+    public LoginAuthFailHandler authFailHandler(){
+        return new LoginAuthFailHandler(urlEntryPoint());
     }
 
 }
