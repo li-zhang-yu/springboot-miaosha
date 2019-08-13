@@ -1,4 +1,4 @@
-package com.github.springbootmiaosha.web.controller.dto;
+package com.github.springbootmiaosha.web.dto;
 
 /**
  * 七牛云上传返回结果信息实体类

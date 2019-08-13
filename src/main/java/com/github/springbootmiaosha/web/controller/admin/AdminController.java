@@ -2,7 +2,7 @@ package com.github.springbootmiaosha.web.controller.admin;
 
 import com.github.springbootmiaosha.base.ApiResponse;
 import com.github.springbootmiaosha.service.house.IQiNiuService;
-import com.github.springbootmiaosha.web.controller.dto.QiNiuPutRet;
+import com.github.springbootmiaosha.web.dto.QiNiuPutRet;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
