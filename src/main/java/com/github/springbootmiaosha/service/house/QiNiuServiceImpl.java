@@ -43,19 +43,30 @@ public class QiNiuServiceImpl implements IQiNiuService, InitializingBean {
         int retry = 0;
         while (response.needRetry() && retry < 3){
             response = this.uploadManager.put(file, null, getUploadToken());
-            retry ++;
+            retry++;
         }
         return response;
     }
 
     @Override
     public Response uploadFile(InputStream inputStream) throws QiniuException {
-        return null;
+        Response response = this.uploadManager.put(inputStream, null, getUploadToken(), null, null);
+        int retry = 0;
+        while (response.needRetry() && retry < 3){
+            response = this.uploadManager.put(inputStream, null, getUploadToken(), null, null);
+            retry++;
+        }
+        return response;
     }
 
     @Override
     public Response delete(String key) throws QiniuException {
-        return null;
+        Response response = bucketManager.delete(this.bucket, key);
+        int retry = 0;
+        while (response.needRetry() && retry < 3){
+            response = bucketManager.delete(this.bucket, key);
+        }
+        return response;
     }
 
     @Override
