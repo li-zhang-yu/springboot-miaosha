@@ -36,5 +36,18 @@ public class QiNiuServiceTests extends SpringbootMiaoshaApplicationTests {
 
     }
 
+    @Test
+    public void testDelete(){
+
+        String key = "FioQpUOTwXqUwQfNyvU6Fi2LpfZn";
+        try {
+            Response response = qiNiuService.delete(key);
+            Assert.assertTrue(response.isOK());
+        }catch (QiniuException e){
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
