@@ -7,6 +7,7 @@ import com.github.springbootmiaosha.web.dto.SupportAddressDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -34,5 +35,23 @@ public class HouseController {
         }
         return ApiResponse.ofSuccess(result.getResult());
     }
+
+    /**
+     * 获取对应城市支持区域列表
+     * @param cityEnName
+     * @return
+     */
+    @GetMapping("/address/support/regions")
+    @ResponseBody
+    public ApiResponse getSupportRegions(@RequestParam(name = "city_name") String cityEnName){
+        ServiceMultiResult<SupportAddressDto> addressResult = adressService.findAllRegionsByCityName(cityEnName);
+
+        if (addressResult.getResult() == null || addressResult.getTotal() < 1) {
+            return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
+        }
+
+        return ApiResponse.ofSuccess(addressResult.getResult());
+    }
+
 
 }

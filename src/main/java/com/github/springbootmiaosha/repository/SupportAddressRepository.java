@@ -19,4 +19,12 @@ public interface SupportAddressRepository extends CrudRepository<SupportAddress,
      * @return
      */
     List<SupportAddress> findAllByLevel(String level);
+
+    /**
+     * 获取市下的所有区和县
+     * @param level
+     * @param belong
+     * @return
+     */
+    List<SupportAddress> findAllByLevelAndBelongTo(String level, String belong);
 }

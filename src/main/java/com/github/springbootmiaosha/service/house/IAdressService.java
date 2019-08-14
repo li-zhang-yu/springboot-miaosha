@@ -17,4 +17,10 @@ public interface IAdressService {
      */
     ServiceMultiResult<SupportAddressDto> findAllCities();
 
+    /**
+     * 根据城市英文简写获取该城市所有支持的区域信息
+     * @param cityName
+     * @return
+     */
+    ServiceMultiResult<SupportAddressDto> findAllRegionsByCityName(String cityName);
 }

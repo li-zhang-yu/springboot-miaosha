@@ -37,4 +37,20 @@ public class AddressServiceImpl implements IAdressService {
         return new ServiceMultiResult<>(addressDtos.size(), addressDtos);
     }
 
+    @Override
+    public ServiceMultiResult<SupportAddressDto> findAllRegionsByCityName(String cityName) {
+        if (cityName == null) {
+            return new ServiceMultiResult<>(0, null);
+        }
+
+        List<SupportAddressDto> result = new ArrayList<>();
+
+        List<SupportAddress> regions = supportAddressRepository.findAllByLevelAndBelongTo(SupportAddress.Level.REGION.getValue(), cityName);
+
+        for (SupportAddress region : regions) {
+            result.add(modelMapper.map(region, SupportAddressDto.class));
+        }
+        return new ServiceMultiResult<>(result.size(), result);
+    }
+
 }
