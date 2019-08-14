@@ -1,7 +1,10 @@
 package com.github.springbootmiaosha.service.house;
 
 import com.github.springbootmiaosha.service.ServiceMultiResult;
+import com.github.springbootmiaosha.web.dto.SubWayDto;
 import com.github.springbootmiaosha.web.dto.SupportAddressDto;
+
+import java.util.List;
 
 /**
  * 地址服务接口
@@ -9,7 +12,7 @@ import com.github.springbootmiaosha.web.dto.SupportAddressDto;
  * @author lizhangyu
  * @date 2019-08-14
  */
-public interface IAdressService {
+public interface IAddressService {
 
     /**
      * 查询所有城市
@@ -23,4 +26,11 @@ public interface IAdressService {
      * @return
      */
     ServiceMultiResult<SupportAddressDto> findAllRegionsByCityName(String cityName);
+
+    /**
+     * 获取该城市的所有地铁线路图
+     * @param cityEnName
+     * @return
+     */
+    List<SubWayDto> findAllSubwayByCity(String cityEnName);
 }

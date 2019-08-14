@@ -1,8 +1,11 @@
 package com.github.springbootmiaosha.service.house;
 
+import com.github.springbootmiaosha.entity.Subway;
 import com.github.springbootmiaosha.entity.SupportAddress;
+import com.github.springbootmiaosha.repository.SubwayRepository;
 import com.github.springbootmiaosha.repository.SupportAddressRepository;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
+import com.github.springbootmiaosha.web.dto.SubWayDto;
 import com.github.springbootmiaosha.web.dto.SupportAddressDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +21,13 @@ import java.util.List;
  * @date 2019-08-14
  */
 @Service
-public class AddressServiceImpl implements IAdressService {
+public class AddressServiceImpl implements IAddressService {
 
     @Autowired
     private SupportAddressRepository supportAddressRepository;
+
+    @Autowired
+    private SubwayRepository subwayRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -53,4 +59,17 @@ public class AddressServiceImpl implements IAdressService {
         return new ServiceMultiResult<>(result.size(), result);
     }
 
+    @Override
+    public List<SubWayDto> findAllSubwayByCity(String cityEnName) {
+        List<SubWayDto> result = new ArrayList<>();
+        List<Subway> subways = subwayRepository.findAllByCityEnName(cityEnName);
+
+        if (subways.isEmpty()){
+            return result;
+        }
+
+        subways.forEach(subway -> result.add(modelMapper.map(subway, SubWayDto.class)));
+
+        return result;
+    }
 }

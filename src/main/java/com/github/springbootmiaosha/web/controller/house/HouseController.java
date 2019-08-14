@@ -2,13 +2,16 @@ package com.github.springbootmiaosha.web.controller.house;
 
 import com.github.springbootmiaosha.base.ApiResponse;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
-import com.github.springbootmiaosha.service.house.IAdressService;
+import com.github.springbootmiaosha.service.house.IAddressService;
+import com.github.springbootmiaosha.web.dto.SubWayDto;
 import com.github.springbootmiaosha.web.dto.SupportAddressDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 房屋控制层
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HouseController {
 
     @Autowired
-    private IAdressService adressService;
+    private IAddressService adressService;
 
     /**
      * 获取支持城市列表
@@ -51,6 +54,21 @@ public class HouseController {
         }
 
         return ApiResponse.ofSuccess(addressResult.getResult());
+    }
+
+    /**
+     * 获取具体城市所支持的地铁线路图
+     * @param cityEnName
+     * @return
+     */
+    @GetMapping("/address/support/subway/line")
+    @ResponseBody
+    public ApiResponse getSupportSubwayLine(@RequestParam(name = "city_name") String cityEnName){
+        List<SubWayDto> subways = adressService.findAllSubwayByCity(cityEnName);
+        if (subways.isEmpty()){
+            return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
+        }
+        return ApiResponse.ofSuccess(subways);
     }
 
 
