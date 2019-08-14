@@ -23,7 +23,7 @@ import java.util.List;
 public class HouseController {
 
     @Autowired
-    private IAddressService adressService;
+    private IAddressService addressService;
 
     /**
      * 获取支持城市列表
@@ -32,7 +32,7 @@ public class HouseController {
     @GetMapping("/address/support/cities")
     @ResponseBody
     public ApiResponse getSupportCities(){
-        ServiceMultiResult<SupportAddressDto> result = adressService.findAllCities();
+        ServiceMultiResult<SupportAddressDto> result = addressService.findAllCities();
         if (result.getResultSize() == 0) {
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
         }
@@ -47,7 +47,7 @@ public class HouseController {
     @GetMapping("/address/support/regions")
     @ResponseBody
     public ApiResponse getSupportRegions(@RequestParam(name = "city_name") String cityEnName){
-        ServiceMultiResult<SupportAddressDto> addressResult = adressService.findAllRegionsByCityName(cityEnName);
+        ServiceMultiResult<SupportAddressDto> addressResult = addressService.findAllRegionsByCityName(cityEnName);
 
         if (addressResult.getResult() == null || addressResult.getTotal() < 1) {
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
@@ -64,7 +64,7 @@ public class HouseController {
     @GetMapping("/address/support/subway/line")
     @ResponseBody
     public ApiResponse getSupportSubwayLine(@RequestParam(name = "city_name") String cityEnName){
-        List<SubWayDto> subways = adressService.findAllSubwayByCity(cityEnName);
+        List<SubWayDto> subways = addressService.findAllSubwayByCity(cityEnName);
         if (subways.isEmpty()){
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
         }
