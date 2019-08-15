@@ -3,6 +3,9 @@ package com.github.springbootmiaosha.service;
 /**
  * 服务接口通用结构
  * @param <T>
+ *
+ * @author lizhangyu
+ * @date 2019-08-15
  */
 public class ServiceResult<T> {
 
