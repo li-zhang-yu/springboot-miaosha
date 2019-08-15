@@ -1,11 +1,14 @@
 package com.github.springbootmiaosha.service.house;
 
 import com.github.springbootmiaosha.entity.Subway;
+import com.github.springbootmiaosha.entity.SubwayStation;
 import com.github.springbootmiaosha.entity.SupportAddress;
 import com.github.springbootmiaosha.repository.SubwayRepository;
+import com.github.springbootmiaosha.repository.SubwayStationRepository;
 import com.github.springbootmiaosha.repository.SupportAddressRepository;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
-import com.github.springbootmiaosha.web.dto.SubWayDto;
+import com.github.springbootmiaosha.web.dto.SubwayDto;
+import com.github.springbootmiaosha.web.dto.SubwayStationDto;
 import com.github.springbootmiaosha.web.dto.SupportAddressDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class AddressServiceImpl implements IAddressService {
 
     @Autowired
     private SubwayRepository subwayRepository;
+
+    @Autowired
+    private SubwayStationRepository subwayStationRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -60,15 +66,29 @@ public class AddressServiceImpl implements IAddressService {
     }
 
     @Override
-    public List<SubWayDto> findAllSubwayByCity(String cityEnName) {
-        List<SubWayDto> result = new ArrayList<>();
+    public List<SubwayDto> findAllSubwayByCity(String cityEnName) {
+        List<SubwayDto> result = new ArrayList<>();
         List<Subway> subways = subwayRepository.findAllByCityEnName(cityEnName);
 
-        if (subways.isEmpty()){
+        if (subways.isEmpty()) {
             return result;
         }
 
-        subways.forEach(subway -> result.add(modelMapper.map(subway, SubWayDto.class)));
+        subways.forEach(subway -> result.add(modelMapper.map(subway, SubwayDto.class)));
+
+        return result;
+    }
+
+    @Override
+    public List<SubwayStationDto> findAllStationBySubway(Long subwayId) {
+        List<SubwayStationDto> result = new ArrayList<>();
+        List<SubwayStation> subwayStations = subwayStationRepository.findAllBySubwayId(subwayId);
+
+        if (subwayStations.isEmpty()) {
+            return result;
+        }
+
+        subwayStations.forEach(subwayStation -> result.add(modelMapper.map(subwayStation, SubwayStationDto.class)));
 
         return result;
     }

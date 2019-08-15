@@ -1,7 +1,8 @@
 package com.github.springbootmiaosha.service.house;
 
 import com.github.springbootmiaosha.service.ServiceMultiResult;
-import com.github.springbootmiaosha.web.dto.SubWayDto;
+import com.github.springbootmiaosha.web.dto.SubwayDto;
+import com.github.springbootmiaosha.web.dto.SubwayStationDto;
 import com.github.springbootmiaosha.web.dto.SupportAddressDto;
 
 import java.util.List;
@@ -32,5 +33,13 @@ public interface IAddressService {
      * @param cityEnName
      * @return
      */
-    List<SubWayDto> findAllSubwayByCity(String cityEnName);
+    List<SubwayDto> findAllSubwayByCity(String cityEnName);
+
+    /**
+     * 获取地铁线路的所有站点
+     * @param subwayId
+     * @return
+     */
+    List<SubwayStationDto> findAllStationBySubway(Long subwayId);
+
 }

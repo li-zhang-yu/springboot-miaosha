@@ -6,7 +6,7 @@ package com.github.springbootmiaosha.web.dto;
  * @author lizhangyu
  * @date 2019-08-14
  */
-public class SubWayDto {
+public class SubwayDto {
 
     private Long id;
     private String name;

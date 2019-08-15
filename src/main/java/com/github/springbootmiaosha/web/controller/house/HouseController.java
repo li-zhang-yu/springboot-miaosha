@@ -3,7 +3,8 @@ package com.github.springbootmiaosha.web.controller.house;
 import com.github.springbootmiaosha.base.ApiResponse;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.house.IAddressService;
-import com.github.springbootmiaosha.web.dto.SubWayDto;
+import com.github.springbootmiaosha.web.dto.SubwayDto;
+import com.github.springbootmiaosha.web.dto.SubwayStationDto;
 import com.github.springbootmiaosha.web.dto.SupportAddressDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,12 +65,26 @@ public class HouseController {
     @GetMapping("/address/support/subway/line")
     @ResponseBody
     public ApiResponse getSupportSubwayLine(@RequestParam(name = "city_name") String cityEnName){
-        List<SubWayDto> subways = addressService.findAllSubwayByCity(cityEnName);
+        List<SubwayDto> subways = addressService.findAllSubwayByCity(cityEnName);
         if (subways.isEmpty()){
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
         }
         return ApiResponse.ofSuccess(subways);
     }
 
+    /**
+     * 获取对应地铁线路所支持的地铁站点
+     * @param subwayId
+     * @return
+     */
+    @GetMapping("/address/support/subway/station")
+    @ResponseBody
+    public ApiResponse getSupportSubwayStation(@RequestParam(name = "subway_id") Long subwayId){
+        List<SubwayStationDto> stationDtos = addressService.findAllStationBySubway(subwayId);
+        if (stationDtos.isEmpty()) {
+            return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
+        }
+        return ApiResponse.ofSuccess(stationDtos);
+    }
 
 }
