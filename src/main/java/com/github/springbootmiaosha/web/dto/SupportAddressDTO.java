@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author lizhangyu
  * @date 2019-08-14
  */
-public class SupportAddressDto {
+public class SupportAddressDTO {
 
     private long id;
 

@@ -28,4 +28,19 @@ public interface SupportAddressRepository extends CrudRepository<SupportAddress,
      */
     List<SupportAddress> findAllByLevelAndBelongTo(String level, String belong);
 
+    /**
+     * 通过英文简写和行政级别获取城市区域
+     * @param enName
+     * @param level
+     * @return
+     */
+    SupportAddress findByEnNameAndLevel(String enName, String level);
+
+    /**
+     * 通过英文简写和上一级行政单位名获取区/县区域
+     * @param enName
+     * @param belongTo
+     * @return
+     */
+    SupportAddress findByEnNameAndBelongTo(String enName, String belongTo);
 }

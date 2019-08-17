@@ -1,16 +1,16 @@
 package com.github.springbootmiaosha.web.dto;
 
 /**
- * 地铁站返回结果实体类
+ * 地铁返回结果实体类
  *
  * @author lizhangyu
- * @date 2019-08-15
+ * @date 2019-08-14
  */
-public class SubwayStationDto {
+public class SubwayDTO {
 
     private Long id;
-    private Long subwayId;
     private String name;
+    private String cityEnName;
 
     public Long getId() {
         return id;
@@ -20,14 +20,6 @@ public class SubwayStationDto {
         this.id = id;
     }
 
-    public Long getSubwayId() {
-        return subwayId;
-    }
-
-    public void setSubwayId(Long subwayId) {
-        this.subwayId = subwayId;
-    }
-
     public String getName() {
         return name;
     }
@@ -35,4 +27,13 @@ public class SubwayStationDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getCityEnName() {
+        return cityEnName;
+    }
+
+    public void setCityEnName(String cityEnName) {
+        this.cityEnName = cityEnName;
+    }
+
 }

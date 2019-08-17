@@ -7,15 +7,17 @@ import com.github.springbootmiaosha.repository.SubwayRepository;
 import com.github.springbootmiaosha.repository.SubwayStationRepository;
 import com.github.springbootmiaosha.repository.SupportAddressRepository;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
-import com.github.springbootmiaosha.web.dto.SubwayDto;
-import com.github.springbootmiaosha.web.dto.SubwayStationDto;
-import com.github.springbootmiaosha.web.dto.SupportAddressDto;
+import com.github.springbootmiaosha.web.dto.SubwayDTO;
+import com.github.springbootmiaosha.web.dto.SubwayStationDTO;
+import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 地址服务接口业务层
@@ -39,57 +41,72 @@ public class AddressServiceImpl implements IAddressService {
     private ModelMapper modelMapper;
 
     @Override
-    public ServiceMultiResult<SupportAddressDto> findAllCities() {
+    public ServiceMultiResult<SupportAddressDTO> findAllCities() {
         List<SupportAddress> addresses = supportAddressRepository.findAllByLevel(SupportAddress.Level.CITY.getValue());
-        List<SupportAddressDto> addressDtos = new ArrayList<>();
+        List<SupportAddressDTO> addressDtos = new ArrayList<>();
         for (SupportAddress supportAddress : addresses){
-            SupportAddressDto target = modelMapper.map(supportAddress, SupportAddressDto.class);
+            SupportAddressDTO target = modelMapper.map(supportAddress, SupportAddressDTO.class);
             addressDtos.add(target);
         }
         return new ServiceMultiResult<>(addressDtos.size(), addressDtos);
     }
 
     @Override
-    public ServiceMultiResult<SupportAddressDto> findAllRegionsByCityName(String cityName) {
+    public ServiceMultiResult<SupportAddressDTO> findAllRegionsByCityName(String cityName) {
         if (cityName == null) {
             return new ServiceMultiResult<>(0, null);
         }
 
-        List<SupportAddressDto> result = new ArrayList<>();
+        List<SupportAddressDTO> result = new ArrayList<>();
 
         List<SupportAddress> regions = supportAddressRepository.findAllByLevelAndBelongTo(SupportAddress.Level.REGION.getValue(), cityName);
 
         for (SupportAddress region : regions) {
-            result.add(modelMapper.map(region, SupportAddressDto.class));
+            result.add(modelMapper.map(region, SupportAddressDTO.class));
         }
         return new ServiceMultiResult<>(result.size(), result);
     }
 
     @Override
-    public List<SubwayDto> findAllSubwayByCity(String cityEnName) {
-        List<SubwayDto> result = new ArrayList<>();
+    public List<SubwayDTO> findAllSubwayByCity(String cityEnName) {
+        List<SubwayDTO> result = new ArrayList<>();
         List<Subway> subways = subwayRepository.findAllByCityEnName(cityEnName);
 
         if (subways.isEmpty()) {
             return result;
         }
 
-        subways.forEach(subway -> result.add(modelMapper.map(subway, SubwayDto.class)));
+        subways.forEach(subway -> result.add(modelMapper.map(subway, SubwayDTO.class)));
 
         return result;
     }
 
     @Override
-    public List<SubwayStationDto> findAllStationBySubway(Long subwayId) {
-        List<SubwayStationDto> result = new ArrayList<>();
+    public List<SubwayStationDTO> findAllStationBySubway(Long subwayId) {
+        List<SubwayStationDTO> result = new ArrayList<>();
         List<SubwayStation> subwayStations = subwayStationRepository.findAllBySubwayId(subwayId);
 
         if (subwayStations.isEmpty()) {
             return result;
         }
 
-        subwayStations.forEach(subwayStation -> result.add(modelMapper.map(subwayStation, SubwayStationDto.class)));
+        subwayStations.forEach(subwayStation -> result.add(modelMapper.map(subwayStation, SubwayStationDTO.class)));
 
         return result;
     }
+
+    @Override
+    public Map<SupportAddress.Level, SupportAddressDTO> findCityAndRegion(String cityEnName, String regionEnName) {
+        Map<SupportAddress.Level, SupportAddressDTO> result = new HashMap<>();
+
+        SupportAddress city = supportAddressRepository.findByEnNameAndLevel(cityEnName, SupportAddress.Level.CITY.getValue());
+
+        SupportAddress region = supportAddressRepository.findByEnNameAndBelongTo(regionEnName, city.getEnName());
+
+        result.put(SupportAddress.Level.CITY, modelMapper.map(city, SupportAddressDTO.class));
+        result.put(SupportAddress.Level.REGION, modelMapper.map(region, SupportAddressDTO.class));
+
+        return result;
+    }
+
 }

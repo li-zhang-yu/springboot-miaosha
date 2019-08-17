@@ -1,6 +1,7 @@
 package com.github.springbootmiaosha.repository;
 
 import com.github.springbootmiaosha.entity.Subway;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author lizhangyu
  * @date 2019-08-14
  */
-public interface SubwayRepository extends CrudRepository<Subway, Long> {
+public interface SubwayRepository extends JpaRepository<Subway, Long> {
 
     /**
      * 查询所属城市的所有地铁

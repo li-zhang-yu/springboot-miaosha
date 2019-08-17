@@ -3,9 +3,9 @@ package com.github.springbootmiaosha.web.controller.house;
 import com.github.springbootmiaosha.base.ApiResponse;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.house.IAddressService;
-import com.github.springbootmiaosha.web.dto.SubwayDto;
-import com.github.springbootmiaosha.web.dto.SubwayStationDto;
-import com.github.springbootmiaosha.web.dto.SupportAddressDto;
+import com.github.springbootmiaosha.web.dto.SubwayDTO;
+import com.github.springbootmiaosha.web.dto.SubwayStationDTO;
+import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +33,7 @@ public class HouseController {
     @GetMapping("/address/support/cities")
     @ResponseBody
     public ApiResponse getSupportCities(){
-        ServiceMultiResult<SupportAddressDto> result = addressService.findAllCities();
+        ServiceMultiResult<SupportAddressDTO> result = addressService.findAllCities();
         if (result.getResultSize() == 0) {
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
         }
@@ -48,7 +48,7 @@ public class HouseController {
     @GetMapping("/address/support/regions")
     @ResponseBody
     public ApiResponse getSupportRegions(@RequestParam(name = "city_name") String cityEnName){
-        ServiceMultiResult<SupportAddressDto> addressResult = addressService.findAllRegionsByCityName(cityEnName);
+        ServiceMultiResult<SupportAddressDTO> addressResult = addressService.findAllRegionsByCityName(cityEnName);
 
         if (addressResult.getResult() == null || addressResult.getTotal() < 1) {
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
@@ -65,7 +65,7 @@ public class HouseController {
     @GetMapping("/address/support/subway/line")
     @ResponseBody
     public ApiResponse getSupportSubwayLine(@RequestParam(name = "city_name") String cityEnName){
-        List<SubwayDto> subways = addressService.findAllSubwayByCity(cityEnName);
+        List<SubwayDTO> subways = addressService.findAllSubwayByCity(cityEnName);
         if (subways.isEmpty()){
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
         }
@@ -80,7 +80,7 @@ public class HouseController {
     @GetMapping("/address/support/subway/station")
     @ResponseBody
     public ApiResponse getSupportSubwayStation(@RequestParam(name = "subway_id") Long subwayId){
-        List<SubwayStationDto> stationDtos = addressService.findAllStationBySubway(subwayId);
+        List<SubwayStationDTO> stationDtos = addressService.findAllStationBySubway(subwayId);
         if (stationDtos.isEmpty()) {
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_FOUND);
         }

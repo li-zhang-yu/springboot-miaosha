@@ -1,9 +1,6 @@
 package com.github.springbootmiaosha.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -12,6 +9,8 @@ import java.util.Date;
  * @author lizhangyu
  * @date 2019-08-15
  */
+@Entity
+@Table(name = "house")
 public class House {
 
     /**

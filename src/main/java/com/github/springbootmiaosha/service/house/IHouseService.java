@@ -1,6 +1,8 @@
 package com.github.springbootmiaosha.service.house;
 
 import com.github.springbootmiaosha.service.ServiceResult;
+import com.github.springbootmiaosha.web.dto.HouseDTO;
+import com.github.springbootmiaosha.web.form.HouseForm;
 
 /**
  * 房屋管理服务相关接口
@@ -17,5 +19,12 @@ public interface IHouseService {
      * @return
      */
     ServiceResult addTag(Long houseId, String tag);
+
+    /**
+     * 新增房源
+     * @param houseForm
+     * @return
+     */
+    ServiceResult<HouseDTO> add(HouseForm houseForm);
 
 }
