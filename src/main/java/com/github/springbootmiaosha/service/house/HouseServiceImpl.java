@@ -14,6 +14,10 @@ import com.github.springbootmiaosha.web.form.PhotoForm;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -191,7 +195,13 @@ public class HouseServiceImpl implements IHouseService {
     public ServiceMultiResult<HouseDTO> adminQuery(DatatableSearch searchBody) {
         List<HouseDTO> houseDTOS = new ArrayList<>();
 
-        Iterable<House> houses = houseRepository.findAll();
+        Sort sort = new Sort(Sort.Direction.fromString(searchBody.getDirection()), searchBody.getOrderBy());
+
+        int page = searchBody.getStart() / searchBody.getLength();
+
+        Pageable pageable = new PageRequest(page, searchBody.getLength(), sort);
+
+        Page<House> houses = houseRepository.findAll(pageable);
 
         houses.forEach(house -> {
             HouseDTO houseDTO = modelMapper.map(house, HouseDTO.class);
@@ -199,6 +209,6 @@ public class HouseServiceImpl implements IHouseService {
             houseDTOS.add(houseDTO);
         });
 
-        return new ServiceMultiResult<>(houseDTOS.size(), houseDTOS);
+        return new ServiceMultiResult<>(houses.getTotalElements(), houseDTOS);
     }
 }
