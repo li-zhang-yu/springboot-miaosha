@@ -1,7 +1,9 @@
 package com.github.springbootmiaosha.web.controller.admin;
 
+import com.github.springbootmiaosha.base.ApiDataTableResponse;
 import com.github.springbootmiaosha.base.ApiResponse;
 import com.github.springbootmiaosha.entity.SupportAddress;
+import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.service.house.IAddressService;
 import com.github.springbootmiaosha.service.house.IHouseService;
@@ -9,6 +11,7 @@ import com.github.springbootmiaosha.service.house.IQiNiuService;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
 import com.github.springbootmiaosha.web.dto.QiNiuPutRet;
 import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
+import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
@@ -83,6 +86,15 @@ public class AdminController {
     }
 
     /**
+     * 房源列表页
+     * @return
+     */
+    @GetMapping("admin/house/list")
+    public String houseListPage(){
+        return "admin/house-list";
+    }
+
+    /**
      * 七牛云图片上传
      * @param file
      * @return
@@ -128,7 +140,7 @@ public class AdminController {
     }
 
     /**
-     * 新增房源接口
+     * 新增房源
      * @param houseForm
      * @param bindingResult
      * @return
@@ -157,6 +169,26 @@ public class AdminController {
         }
 
         return ApiResponse.ofSuccess(ApiResponse.Status.NOT_VALID_PARAM);
+    }
+
+    /**
+     * 房源列表
+     * @param searchBody
+     * @return
+     */
+    @PostMapping("/admin/houses")
+    @ResponseBody
+    public ApiDataTableResponse houses(@ModelAttribute DatatableSearch searchBody){
+        ServiceMultiResult<HouseDTO> result = houseService.adminQuery(searchBody);
+
+        ApiDataTableResponse response = new ApiDataTableResponse(ApiResponse.Status.SUCCESS);
+
+        response.setData(result.getResult());
+        response.setRecordsFiltered(result.getTotal());
+        response.setRecordsTotal(result.getTotal());
+
+        response.setDraw(searchBody.getDraw());
+        return response;
     }
 
 }

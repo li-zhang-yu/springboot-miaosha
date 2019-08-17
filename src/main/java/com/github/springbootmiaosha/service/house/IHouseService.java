@@ -1,7 +1,9 @@
 package com.github.springbootmiaosha.service.house;
 
+import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
+import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
 
 /**
@@ -26,5 +28,12 @@ public interface IHouseService {
      * @return
      */
     ServiceResult<HouseDTO> add(HouseForm houseForm);
+
+    /**
+     * 房源搜索
+     * @param searchBody
+     * @return
+     */
+    ServiceMultiResult<HouseDTO> adminQuery(DatatableSearch searchBody);
 
 }

@@ -3,10 +3,12 @@ package com.github.springbootmiaosha.service.house;
 import com.github.springbootmiaosha.base.LoginUserUtil;
 import com.github.springbootmiaosha.entity.*;
 import com.github.springbootmiaosha.repository.*;
+import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
 import com.github.springbootmiaosha.web.dto.HouseDetailDTO;
 import com.github.springbootmiaosha.web.dto.HousePictureDTO;
+import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
 import com.github.springbootmiaosha.web.form.PhotoForm;
 import org.modelmapper.ModelMapper;
@@ -185,4 +187,18 @@ public class HouseServiceImpl implements IHouseService {
         return pictures;
     }
 
+    @Override
+    public ServiceMultiResult<HouseDTO> adminQuery(DatatableSearch searchBody) {
+        List<HouseDTO> houseDTOS = new ArrayList<>();
+
+        Iterable<House> houses = houseRepository.findAll();
+
+        houses.forEach(house -> {
+            HouseDTO houseDTO = modelMapper.map(house, HouseDTO.class);
+            houseDTO.setCover(this.cdnPrefix + house.getCover());
+            houseDTOS.add(houseDTO);
+        });
+
+        return new ServiceMultiResult<>(houseDTOS.size(), houseDTOS);
+    }
 }

@@ -1,7 +1,7 @@
 package com.github.springbootmiaosha.web.form;
 
 /**
- * 照片表单
+ * 照片表单实体类
  *
  * @author lizhangyu
  * @date 2019-08-16
