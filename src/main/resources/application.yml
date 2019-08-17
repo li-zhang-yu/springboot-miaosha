@@ -63,7 +63,7 @@ qiniu:
   SecretKey: QEhaGnYenv0QJnSidQNFuw_z-QlirQCPs_kROty8
   Bucket: lakers
   cdn:
-    prefix: pw4lctp1b.bkt.clouddn.com
+    prefix: http://pw4lctp1b.bkt.clouddn.com/
 
 
 
