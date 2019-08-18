@@ -1,5 +1,6 @@
 package com.github.springbootmiaosha.service.house;
 
+import com.github.springbootmiaosha.base.HouseStatus;
 import com.github.springbootmiaosha.base.LoginUserUtil;
 import com.github.springbootmiaosha.entity.*;
 import com.github.springbootmiaosha.repository.*;
@@ -18,8 +19,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,9 +65,9 @@ public class HouseServiceImpl implements IHouseService {
     @Override
     @Transactional
     public ServiceResult addTag(Long houseId, String tag) {
-        House house = houseRepository.getOne(houseId);
+        Optional<House> house = houseRepository.findById(houseId);
 
-        if (house == null) {
+        if (!house.isPresent()) {
             return ServiceResult.notFound();
         }
 
@@ -201,7 +204,34 @@ public class HouseServiceImpl implements IHouseService {
 
         Pageable pageable = new PageRequest(page, searchBody.getLength(), sort);
 
-        Page<House> houses = houseRepository.findAll(pageable);
+        Specification<House> specification = (root, query, cb) -> {
+            Predicate predicate = cb.equal(root.get("adminId"), LoginUserUtil.getLoginUserId());
+            predicate = cb.and(predicate, cb.notEqual(root.get("status"), HouseStatus.DELETED.getValue()));
+
+            if (searchBody.getCity() != null){
+                predicate = cb.and(predicate, cb.equal(root.get("cityEnName"), searchBody.getCity()));
+            }
+
+            if (searchBody.getStatus() != null){
+                predicate = cb.and(predicate, cb.equal(root.get("status"), searchBody.getStatus()));
+            }
+
+            if (searchBody.getCreateTimeMin() != null){
+                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("createTime"), searchBody.getCreateTimeMin()));
+            }
+
+            if (searchBody.getCreateTimeMax() != null){
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("createTime"), searchBody.getCreateTimeMax()));
+            }
+
+            if (searchBody.getTitle() != null){
+                predicate = cb.and(predicate, cb.like(root.get("title"), "%" + searchBody.getTitle() + "%"));
+            }
+
+            return predicate;
+        };
+
+        Page<House> houses = houseRepository.findAll(specification, pageable);
 
         houses.forEach(house -> {
             HouseDTO houseDTO = modelMapper.map(house, HouseDTO.class);
