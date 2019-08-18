@@ -12,6 +12,8 @@ import com.github.springbootmiaosha.web.dto.HousePictureDTO;
 import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
 import com.github.springbootmiaosha.web.form.PhotoForm;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +57,9 @@ public class HouseServiceImpl implements IHouseService {
 
     @Autowired
     private HousePictureRepository housePictureRepository;
+
+    @Autowired
+    private IQiNiuService qiNiuService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -243,6 +248,30 @@ public class HouseServiceImpl implements IHouseService {
         result.setTags(tagList);
 
         return ServiceResult.of(result);
+    }
+
+    @Override
+    public ServiceResult removePhoto(Long id) {
+        Optional<HousePicture> pictureExample = housePictureRepository.findById(id);
+        if (!pictureExample.isPresent()){
+            return ServiceResult.notFound();
+        }
+
+        HousePicture picture = pictureExample.get();
+
+        try {
+            Response response = this.qiNiuService.delete(picture.getPath());
+            if (response.isOK()){
+                housePictureRepository.deleteById(id);
+                return ServiceResult.success();
+            }else {
+                return new ServiceResult(false, response.error);
+            }
+        }catch (QiniuException e){
+            e.printStackTrace();
+            return new ServiceResult(false, e.getMessage());
+        }
+
     }
 
     /**

@@ -50,4 +50,11 @@ public interface IHouseService {
      */
     ServiceResult<HouseDTO> findCompleteOne(Long id);
 
+    /**
+     * 删除图片
+     * @param id
+     * @return
+     */
+    ServiceResult removePhoto(Long id);
+
 }

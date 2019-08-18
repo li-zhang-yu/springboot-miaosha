@@ -257,4 +257,21 @@ public class AdminController {
         return response;
     }
 
+    /**
+     * 移除图片接口
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/admin/house/photo")
+    @ResponseBody
+    public ApiResponse removeHousePhoto(@RequestParam(value = "id") Long id){
+        ServiceResult result = this.houseService.removePhoto(id);
+
+        if (result.isSuccess()){
+            return ApiResponse.ofSuccess(ApiResponse.Status.SUCCESS);
+        }else {
+            return ApiResponse.ofMessage(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+        }
+    }
+
 }
