@@ -8,9 +8,7 @@ import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.service.house.IAddressService;
 import com.github.springbootmiaosha.service.house.IHouseService;
 import com.github.springbootmiaosha.service.house.IQiNiuService;
-import com.github.springbootmiaosha.web.dto.HouseDTO;
-import com.github.springbootmiaosha.web.dto.QiNiuPutRet;
-import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
+import com.github.springbootmiaosha.web.dto.*;
 import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
 import com.google.gson.Gson;
@@ -18,6 +16,7 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -189,6 +188,44 @@ public class AdminController {
 
         response.setDraw(searchBody.getDraw());
         return response;
+    }
+
+    /**
+     * 房源信息编辑页
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("/admin/house/edit")
+    public String houseEditPage(@RequestParam(value = "id") Long id, Model model){
+        if (id == null || id < 1) {
+            return "404";
+        }
+
+        ServiceResult<HouseDTO> serviceResult = houseService.findCompleteOne(id);
+        if (!serviceResult.isSuccess()) {
+            return "404";
+        }
+
+        HouseDTO result = serviceResult.getResult();
+        model.addAttribute("house", result);
+
+        Map<SupportAddress.Level, SupportAddressDTO> addressMap = addressService.findCityAndRegion(result.getCityEnName(), result.getRegionEnName());
+        model.addAttribute("city", addressMap.get(SupportAddress.Level.CITY));
+        model.addAttribute("region", addressMap.get(SupportAddress.Level.REGION));
+
+        HouseDetailDTO detailDTO = result.getHouseDetail();
+        ServiceResult<SubwayDTO> subwayServiceResult = addressService.findSubway(detailDTO.getSubwayLineId());
+        if (subwayServiceResult.isSuccess()){
+            model.addAttribute("subway", subwayServiceResult.getResult());
+        }
+
+        ServiceResult<SubwayStationDTO> subwayStationServiceResult = addressService.findSubwayStation(detailDTO.getSubwayStationId());
+        if (subwayStationServiceResult.isSuccess()){
+            model.addAttribute("station", subwayStationServiceResult.getResult());
+        }
+
+        return "admin/house-edit";
     }
 
 }

@@ -2,6 +2,7 @@ package com.github.springbootmiaosha.service.house;
 
 import com.github.springbootmiaosha.entity.SupportAddress;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
+import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.dto.SubwayDTO;
 import com.github.springbootmiaosha.web.dto.SubwayStationDTO;
 import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
@@ -51,5 +52,19 @@ public interface IAddressService {
      * @return
      */
     Map<SupportAddress.Level, SupportAddressDTO> findCityAndRegion(String cityEnName, String regionEnName);
+
+    /**
+     * 获取地铁线信息
+     * @param subwayId
+     * @return
+     */
+    ServiceResult<SubwayDTO> findSubway(Long subwayId);
+
+    /**
+     * 获取地铁站点信息
+     * @param stationId
+     * @return
+     */
+    ServiceResult<SubwayStationDTO> findSubwayStation(Long stationId);
 
 }

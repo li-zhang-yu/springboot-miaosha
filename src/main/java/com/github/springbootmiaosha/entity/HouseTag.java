@@ -27,6 +27,12 @@ public class HouseTag {
      */
     private String name;
 
+    /**
+     * 默认构造器
+     */
+    public HouseTag() {
+    }
+
     public HouseTag(Long houseId, String name) {
         this.houseId = houseId;
         this.name = name;

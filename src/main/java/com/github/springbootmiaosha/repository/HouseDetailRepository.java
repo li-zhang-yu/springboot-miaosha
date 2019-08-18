@@ -10,4 +10,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date 2019-08-17
  */
 public interface HouseDetailRepository extends JpaRepository<HouseDetail, Long> {
+
+    /**
+     * 根据房屋id查找房屋详情
+     * @param houseId
+     * @return
+     */
+    HouseDetail findByHouseId(Long houseId);
 }

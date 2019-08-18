@@ -7,6 +7,7 @@ import com.github.springbootmiaosha.repository.SubwayRepository;
 import com.github.springbootmiaosha.repository.SubwayStationRepository;
 import com.github.springbootmiaosha.repository.SupportAddressRepository;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
+import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.dto.SubwayDTO;
 import com.github.springbootmiaosha.web.dto.SubwayStationDTO;
 import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
@@ -14,10 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 地址服务接口业务层
@@ -109,4 +107,35 @@ public class AddressServiceImpl implements IAddressService {
         return result;
     }
 
+    @Override
+    public ServiceResult<SubwayDTO> findSubway(Long subwayId) {
+        if (subwayId == null){
+            return ServiceResult.notFound();
+        }
+
+        Optional<Subway> subwayExample = subwayRepository.findById(subwayId);
+        if (!subwayExample.isPresent()) {
+            return ServiceResult.notFound();
+        }
+
+        Subway subway = subwayExample.get();
+
+        return ServiceResult.of(modelMapper.map(subway, SubwayDTO.class));
+    }
+
+    @Override
+    public ServiceResult<SubwayStationDTO> findSubwayStation(Long stationId) {
+        if (stationId == null){
+            return ServiceResult.notFound();
+        }
+
+        Optional<SubwayStation> subwayStationExample = subwayStationRepository.findById(stationId);
+        if (!subwayStationExample.isPresent()){
+            return ServiceResult.notFound();
+        }
+
+        SubwayStation subwayStation = subwayStationExample.get();
+
+        return ServiceResult.of(modelMapper.map(subwayStation, SubwayStationDTO.class));
+    }
 }
