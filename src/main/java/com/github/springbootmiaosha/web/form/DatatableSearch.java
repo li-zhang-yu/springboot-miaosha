@@ -23,16 +23,41 @@ public class DatatableSearch {
     private int start;
     private int length;
 
+    /**
+     * 房源状态
+     */
     private Integer status;
 
+    /**
+     * 起始时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTimeMin;
+
+    /**
+     * 结束时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTimeMax;
 
+    /**
+     * 城市
+     */
     private String city;
+
+    /**
+     * 标题
+     */
     private String title;
+
+    /**
+     * 朝向
+     */
     private String direction;
+
+    /**
+     * 排序
+     */
     private String orderBy;
 
     public int getDraw() {
