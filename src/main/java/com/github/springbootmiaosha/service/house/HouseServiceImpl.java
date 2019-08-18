@@ -130,6 +130,41 @@ public class HouseServiceImpl implements IHouseService {
     }
 
     @Override
+    public ServiceResult<HouseDTO> update(HouseForm houseForm) {
+        Optional<House> houseExample = houseRepository.findById(houseForm.getId());
+        if (!houseExample.isPresent()) {
+            return ServiceResult.notFound();
+        }
+        House house = houseExample.get();
+
+        HouseDetail detail = houseDetailRepository.findByHouseId(house.getId());
+        if (detail == null){
+            return ServiceResult.notFound();
+        }
+
+        ServiceResult wrapperResult = wrapperDetailInfo(detail, houseForm);
+
+        if (wrapperResult != null){
+            return wrapperResult;
+        }
+
+        houseDetailRepository.save(detail);
+
+        List<HousePicture> pictures = generatePictures(houseForm, houseForm.getId());
+        housePictureRepository.saveAll(pictures);
+
+        if (houseForm.getCover() == null){
+            houseForm.setCover(house.getCover());
+        }
+
+        modelMapper.map(houseForm, house);
+        house.setLastUpdateTime(new Date());
+        houseRepository.save(house);
+
+        return ServiceResult.success();
+    }
+
+    @Override
     public ServiceMultiResult<HouseDTO> adminQuery(DatatableSearch searchBody) {
         List<HouseDTO> houseDTOS = new ArrayList<>();
 

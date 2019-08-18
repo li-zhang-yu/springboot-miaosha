@@ -30,6 +30,13 @@ public interface IHouseService {
     ServiceResult<HouseDTO> add(HouseForm houseForm);
 
     /**
+     * 更新房源
+     * @param houseForm
+     * @return
+     */
+    ServiceResult<HouseDTO> update(HouseForm houseForm);
+
+    /**
      * 房源搜索
      * @param searchBody
      * @return
