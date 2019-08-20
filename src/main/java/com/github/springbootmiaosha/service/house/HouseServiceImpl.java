@@ -88,12 +88,30 @@ public class HouseServiceImpl implements IHouseService {
     }
 
     @Override
+    public ServiceResult deleteTag(Long houseId, String tag) {
+        Optional<House> house = houseRepository.findById(houseId);
+
+        if (!house.isPresent()){
+            return ServiceResult.notFound();
+        }
+
+        HouseTag houseTag = houseTagRepository.findByNameAndHouseId(tag, houseId);
+
+        if (houseTag == null) {
+            return new ServiceResult(false, "标签不存在");
+        }
+
+        houseTagRepository.deleteById(houseTag.getId());
+        return ServiceResult.success();
+    }
+
+    @Override
     public ServiceResult<HouseDTO> add(HouseForm houseForm) {
         HouseDetail detail = new HouseDetail();
-        ServiceResult<HouseDTO> subwayValidtionResult = wrapperDetailInfo(detail, houseForm);
+        ServiceResult<HouseDTO> subwayValidationResult = wrapperDetailInfo(detail, houseForm);
 
-        if (subwayValidtionResult != null){
-            return subwayValidtionResult;
+        if (subwayValidationResult != null){
+            return subwayValidationResult;
         }
 
         House house = new House();
@@ -272,6 +290,21 @@ public class HouseServiceImpl implements IHouseService {
             return new ServiceResult(false, e.getMessage());
         }
 
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult updateCover(Long coverId, Long targetId) {
+        Optional<HousePicture> coverExample = housePictureRepository.findById(coverId);
+        if (!coverExample.isPresent()){
+            return ServiceResult.notFound();
+        }
+
+        HousePicture cover = coverExample.get();
+
+        houseRepository.updateCover(targetId, cover.getPath());
+
+        return ServiceResult.success();
     }
 
     /**

@@ -297,4 +297,46 @@ public class AdminController {
         }
     }
 
+    /**
+     * 删除标签
+     * @param houseId
+     * @param tag
+     * @return
+     */
+    @DeleteMapping("/admin/house/tag")
+    @ResponseBody
+    public ApiResponse removeHouseTag(@RequestParam(value = "house_id") Long houseId, @RequestParam(value = "tag") String tag){
+        if (houseId < 1 || Strings.isNullOrEmpty(tag)) {
+            return ApiResponse.ofStatus(ApiResponse.Status.BAD_REQUEST);
+        }
+
+        ServiceResult result = this.houseService.deleteTag(houseId, tag);
+
+        if (result.isSuccess()){
+            return ApiResponse.ofStatus(ApiResponse.Status.SUCCESS);
+        }else {
+            return ApiResponse.ofMessage(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+        }
+    }
+
+    /**
+     * 更新封面
+     * @param coverId
+     * @param targetId
+     * @return
+     */
+    @PostMapping("/admin/house/cover")
+    @ResponseBody
+    public ApiResponse updateCover(@RequestParam(value = "cover_id") Long coverId, @RequestParam(value = "target_id") Long targetId){
+
+        ServiceResult result = houseService.updateCover(coverId, targetId);
+
+        if (result.isSuccess()){
+            return ApiResponse.ofStatus(ApiResponse.Status.SUCCESS);
+        }else {
+            return ApiResponse.ofMessage(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+        }
+
+    }
+
 }

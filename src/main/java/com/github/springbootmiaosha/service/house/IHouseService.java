@@ -23,6 +23,14 @@ public interface IHouseService {
     ServiceResult addTag(Long houseId, String tag);
 
     /**
+     * 删除标签
+     * @param houseId
+     * @param tag
+     * @return
+     */
+    ServiceResult deleteTag(Long houseId, String tag);
+
+    /**
      * 新增房源
      * @param houseForm
      * @return
@@ -56,5 +64,13 @@ public interface IHouseService {
      * @return
      */
     ServiceResult removePhoto(Long id);
+
+    /**
+     * 更新封面
+     * @param coverId
+     * @param targetId
+     * @return
+     */
+    ServiceResult updateCover(Long coverId, Long targetId);
 
 }
