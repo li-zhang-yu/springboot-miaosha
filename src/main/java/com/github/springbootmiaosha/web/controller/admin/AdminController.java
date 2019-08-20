@@ -11,6 +11,7 @@ import com.github.springbootmiaosha.service.house.IQiNiuService;
 import com.github.springbootmiaosha.web.dto.*;
 import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -269,6 +270,28 @@ public class AdminController {
 
         if (result.isSuccess()){
             return ApiResponse.ofSuccess(ApiResponse.Status.SUCCESS);
+        }else {
+            return ApiResponse.ofMessage(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+        }
+    }
+
+    /**
+     * 添加标签
+     * @param houseId
+     * @param tag
+     * @return
+     */
+    @PostMapping("/admin/house/tag")
+    @ResponseBody
+    public ApiResponse addHouseTag(@RequestParam(value = "house_id") Long houseId, @RequestParam(value = "tag") String tag){
+        if (houseId < 1 || Strings.isNullOrEmpty(tag)) {
+            return ApiResponse.ofStatus(ApiResponse.Status.BAD_REQUEST);
+        }
+
+        ServiceResult result = this.houseService.addTag(houseId, tag);
+
+        if (result.isSuccess()){
+            return ApiResponse.ofStatus(ApiResponse.Status.SUCCESS);
         }else {
             return ApiResponse.ofMessage(HttpStatus.BAD_REQUEST.value(), result.getMessage());
         }
