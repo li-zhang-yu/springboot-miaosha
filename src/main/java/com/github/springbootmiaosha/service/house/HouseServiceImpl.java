@@ -307,6 +307,33 @@ public class HouseServiceImpl implements IHouseService {
         return ServiceResult.success();
     }
 
+    @Override
+    @Transactional
+    public ServiceResult updateStatus(Long houseId, int status) {
+        Optional<House> houseExample = houseRepository.findById(houseId);
+
+        if (!houseExample.isPresent()){
+            return ServiceResult.notFound();
+        }
+
+        House house = houseExample.get();
+
+        if (house.getStatus() == status) {
+            return new ServiceResult(false, "状态没有发生变化");
+        }
+
+        if (house.getStatus() == HouseStatus.RENTED.getValue()) {
+            return new ServiceResult(false, "已出租的房源不允许修改状态");
+        }
+
+        if (house.getStatus() == HouseStatus.DELETED.getValue()) {
+            return new ServiceResult(false, "已删除的资源不允许操作");
+        }
+
+        houseRepository.updateStatus(houseId, status);
+        return ServiceResult.success();
+    }
+
     /**
      * 房源详细信息对象填充
      * @param houseDetail

@@ -23,5 +23,15 @@ public interface HouseRepository extends PagingAndSortingRepository<House, Long>
     @Modifying
     @Query("update House as house set house.cover = :cover where house.id = :id")
     void updateCover(@Param(value = "id") Long id, @Param(value = "cover") String cover);
+
+    /**
+     * 更新房源状态
+     * @param id
+     * @param status
+     */
+    @Modifying
+    @Query("update House as house set house.status = :status where house.id = :id")
+    void updateStatus(@Param(value = "id") Long id, @Param(value = "status") int status);
+
 }
 

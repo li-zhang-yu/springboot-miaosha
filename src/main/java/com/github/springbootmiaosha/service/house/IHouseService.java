@@ -73,4 +73,12 @@ public interface IHouseService {
      */
     ServiceResult updateCover(Long coverId, Long targetId);
 
+    /**
+     * 更新房源状态
+     * @param houseId
+     * @param status
+     * @return
+     */
+    ServiceResult updateStatus(Long houseId, int status);
+
 }
