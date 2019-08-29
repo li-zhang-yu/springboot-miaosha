@@ -5,6 +5,9 @@ import com.github.springbootmiaosha.entity.User;
 import com.github.springbootmiaosha.repository.RoleRepository;
 import com.github.springbootmiaosha.repository.UserRepository;
 import com.github.springbootmiaosha.service.IUserService;
+import com.github.springbootmiaosha.service.ServiceResult;
+import com.github.springbootmiaosha.web.dto.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 用户接口实现类
@@ -28,6 +32,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public User findUserByName(String userName) {
@@ -52,4 +59,17 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
 
+    @Override
+    public ServiceResult<UserDTO> findById(Long userid) {
+
+        Optional<User> userExample = userRepository.findById(userid);
+        if (!userExample.isPresent()) {
+            return ServiceResult.notFound();
+        }
+        User user = userExample.get();
+
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
+        return ServiceResult.of(userDTO);
+    }
 }
