@@ -27,4 +27,11 @@ public interface HouseTagRepository extends JpaRepository<HouseTag, Long> {
      * @return
      */
     List<HouseTag> findAllByHouseId(Long houseId);
+
+    /**
+     * 通过房屋id列表查找对应的房屋标签列表
+     * @param houseIds
+     * @return
+     */
+    List<HouseTag> findAllByHouseIdIn(List<Long> houseIds);
 }

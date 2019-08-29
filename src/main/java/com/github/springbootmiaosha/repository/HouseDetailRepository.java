@@ -3,6 +3,8 @@ package com.github.springbootmiaosha.repository;
 import com.github.springbootmiaosha.entity.HouseDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * 房屋详情相关接口
  *
@@ -17,4 +19,11 @@ public interface HouseDetailRepository extends JpaRepository<HouseDetail, Long> 
      * @return
      */
     HouseDetail findByHouseId(Long houseId);
+
+    /**
+     * 通过房屋ids查找房屋列表详情
+     * @param houseIds
+     * @return
+     */
+    List<HouseDetail> findAllByHouseIdIn(List<Long> houseIds);
 }
