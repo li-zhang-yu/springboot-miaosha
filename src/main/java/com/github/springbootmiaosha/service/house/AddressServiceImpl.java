@@ -125,7 +125,7 @@ public class AddressServiceImpl implements IAddressService {
 
     @Override
     public ServiceResult<SubwayStationDTO> findSubwayStation(Long stationId) {
-        if (stationId == null){
+        if (stationId == null) {
             return ServiceResult.notFound();
         }
 
@@ -137,5 +137,22 @@ public class AddressServiceImpl implements IAddressService {
         SubwayStation subwayStation = subwayStationExample.get();
 
         return ServiceResult.of(modelMapper.map(subwayStation, SubwayStationDTO.class));
+    }
+
+    @Override
+    public ServiceResult<SupportAddressDTO> findCity(String cityEnName) {
+        if (cityEnName == null) {
+            return ServiceResult.notFound();
+        }
+
+        SupportAddress supportAddress = supportAddressRepository.findByEnNameAndLevel(cityEnName, SupportAddress.Level.CITY.getValue());
+
+        if (supportAddress == null) {
+            return ServiceResult.notFound();
+        }
+
+        SupportAddressDTO supportAddressDTO = modelMapper.map(supportAddress, SupportAddressDTO.class);
+
+        return ServiceResult.of(supportAddressDTO);
     }
 }

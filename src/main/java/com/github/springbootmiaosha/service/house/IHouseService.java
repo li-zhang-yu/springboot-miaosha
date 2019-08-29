@@ -5,6 +5,7 @@ import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
 import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
+import com.github.springbootmiaosha.web.form.RentSearch;
 
 /**
  * 房屋管理服务相关接口
@@ -80,5 +81,12 @@ public interface IHouseService {
      * @return
      */
     ServiceResult updateStatus(Long houseId, int status);
+
+    /**
+     * 查询房源信息集
+     * @param rentSearch
+     * @return
+     */
+    ServiceMultiResult<HouseDTO> query(RentSearch rentSearch);
 
 }

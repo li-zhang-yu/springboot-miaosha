@@ -12,6 +12,7 @@ import com.github.springbootmiaosha.web.dto.HousePictureDTO;
 import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
 import com.github.springbootmiaosha.web.form.PhotoForm;
+import com.github.springbootmiaosha.web.form.RentSearch;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import org.modelmapper.ModelMapper;
@@ -332,6 +333,32 @@ public class HouseServiceImpl implements IHouseService {
 
         houseRepository.updateStatus(houseId, status);
         return ServiceResult.success();
+    }
+
+    @Override
+    public ServiceMultiResult<HouseDTO> query(RentSearch rentSearch) {
+        Sort sort = new Sort(Sort.Direction.DESC, "lastUpdateTime");
+        int page = rentSearch.getStart() / rentSearch.getSize();
+        Pageable pageable = new PageRequest(page, rentSearch.getSize(), sort);
+
+        Specification<House> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("status"), HouseStatus.PASSES.getValue());
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("cityEnName"), rentSearch.getCityEnName()));
+            return predicate;
+        };
+
+        Page<House> houses = houseRepository.findAll(specification, pageable);
+        List<HouseDTO> houseDTOS = new ArrayList<>();
+
+        houses.forEach(house -> {
+            HouseDTO houseDTO = modelMapper.map(house, HouseDTO.class);
+            HouseDetail houseDetail = houseDetailRepository.findByHouseId(house.getId());
+            houseDTO.setHouseDetail(modelMapper.map(houseDetail, HouseDetailDTO.class));
+            houseDTO.setCover(this.cdnPrefix + house.getCover());
+            houseDTOS.add(houseDTO);
+        });
+
+        return new ServiceMultiResult<>(houses.getTotalElements(), houseDTOS);
     }
 
     /**
