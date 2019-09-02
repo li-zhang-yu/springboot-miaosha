@@ -129,10 +129,11 @@
         </dependency>
 
         <!--ES客户端-->
+        <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/transport -->
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-            <version>6.4.0</version>
+            <artifactId>transport</artifactId>
+            <version>6.5.0</version>
         </dependency>
 
     </dependencies>
