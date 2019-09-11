@@ -65,14 +65,15 @@ qiniu:
   SecretKey: QEhaGnYenv0QJnSidQNFuw_z-QlirQCPs_kROty8
   Bucket: lakers
   cdn:
-    prefix: http://pw4lctp1b.bkt.clouddn.com/
+    prefix: http://lzy.hanyajun.com/
 
 # elasticsearch配置
 elasticsearch:
    cluster:
-    name: xunwu
+    name: my-application
    host: 192.168.10.136
-   port: 9200
+   port: 9300
+
 
 
 
