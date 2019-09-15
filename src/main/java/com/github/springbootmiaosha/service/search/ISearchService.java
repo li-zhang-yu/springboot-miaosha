@@ -28,5 +28,5 @@ public interface ISearchService {
      * @param rentSearch
      * @return
      */
-//    ServiceMultiResult<Long> query(RentSearch rentSearch);
+    ServiceMultiResult<Long> query(RentSearch rentSearch);
 }

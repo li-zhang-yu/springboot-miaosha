@@ -1,7 +1,9 @@
 package com.github.springbootmiaosha.search;
 
 import com.github.springbootmiaosha.SpringbootMiaoshaApplicationTests;
+import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.search.ISearchService;
+import com.github.springbootmiaosha.web.form.RentSearch;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,23 @@ public class SearchServiceTest extends SpringbootMiaoshaApplicationTests {
     @Test
     public void testIndex() {
         Long targetHouseId = 15L;
-        boolean success = searchService.index(targetHouseId);
-        Assert.assertTrue(success);
+        searchService.index(targetHouseId);
+    }
+
+    @Test
+    public void testRemove() {
+        Long targetHouseId = 15L;
+        searchService.remove(targetHouseId);
+    }
+
+    @Test
+    public void testQuery() {
+        RentSearch rentSearch = new RentSearch();
+        rentSearch.setCityEnName("bj");
+        rentSearch.setStart(0);
+        rentSearch.setSize(10);
+        ServiceMultiResult<Long> serviceResult = searchService.query(rentSearch);
+//        System.out.println(serviceResult.getTotal());
+        Assert.assertEquals(4, serviceResult.getTotal());
     }
 }

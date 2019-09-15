@@ -68,6 +68,7 @@ logging:
   config: src/main/resources/logback.xml
   level:
     com.github.springbootmiaosha.dao: trace
+    com.github.springbootmiaosha.service.search: debug #设置为debug级别
 
 # qiniu配置
 qiniu:
