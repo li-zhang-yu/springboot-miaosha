@@ -23,8 +23,11 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +54,11 @@ public class SearchServiceImpl implements ISearchService {
      */
     private static final String INDEX_TYPE = "house";
 
+    /**
+     * 索引主题
+     */
+    private static final String INDEX_TOPIC = "house_build";
+
     @Autowired
     private HouseRepository houseRepository;
 
@@ -69,13 +77,43 @@ public class SearchServiceImpl implements ISearchService {
     @Autowired
     private TransportClient esClient;
 
-    @Override
-    public boolean index(Long houseId) {
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @KafkaListener(topics = INDEX_TOPIC)
+    private void handleMessage(String content) {
+        try {
+            HouseIndexMessage message = objectMapper.readValue(content, HouseIndexMessage.class);
+
+            switch (message.getOperation()) {
+                case HouseIndexMessage.INDEX:
+                    this.createOrUpdateIndex(message);
+                    break;
+                case HouseIndexMessage.REMOVE:
+                    this.removeIndex(message);
+                    break;
+                default:
+                    logger.warn("Not support message content " + content);
+                    break;
+            }
+        }catch (IOException e) {
+            logger.error("Cannot parse json for " + content, e);
+        }
+
+    }
+
+    /**
+     * 创建或者更新索引
+     * @param message
+     */
+    private void createOrUpdateIndex(HouseIndexMessage message) {
+        Long houseId = message.getHouseId();
         Optional<House> houseExample = houseRepository.findById(houseId);
 
         if (!houseExample.isPresent()) {
             logger.error("Index house {} does not exist!", houseId);
-            return false;
+            this.index(houseId, message.getRetry() + 1);
+            return;
         }
 
         House house = houseExample.get();
@@ -120,13 +158,77 @@ public class SearchServiceImpl implements ISearchService {
             logger.debug("Index success with house " + houseId);
         }
 
-        return success;
+    }
+
+    @Override
+    public void index(Long houseId) {
+        this.index(houseId, 0);
+    }
+
+    private void index(Long houseId, int retry) {
+
+        if (retry > HouseIndexMessage.MAX_ENTRY) {
+            logger.error(" Retry index times over 3 for house:" + houseId + " please check it!");
+            return;
+        }
+
+        HouseIndexMessage message = new HouseIndexMessage(houseId, HouseIndexMessage.INDEX, retry);
+
+        try {
+            kafkaTemplate.send(INDEX_TOPIC, objectMapper.writeValueAsString(message));
+        }catch (JsonProcessingException e) {
+            logger.error("Json encode error for " + message);
+        }
 
     }
 
 
     @Override
     public void remove(Long houseId) {
+        this.remove(houseId, 0);
+    }
+
+    /**
+     * 删除索引
+     * @param houseId
+     * @param retry
+     */
+    private void remove(Long houseId, int retry) {
+        if (retry > HouseIndexMessage.MAX_ENTRY) {
+            logger.error(" Retry remove times over 3 for house:" + houseId + " please check it!");
+            return;
+        }
+
+        HouseIndexMessage message = new HouseIndexMessage(houseId, HouseIndexMessage.REMOVE, retry);
+
+        try {
+            kafkaTemplate.send(INDEX_TOPIC, objectMapper.writeValueAsString(message));
+        }catch (JsonProcessingException e) {
+            logger.error("Json encode error for " + message);
+        }
+
+    }
+
+    /**
+     * 删除索引
+     * @param message
+     */
+    private void removeIndex(HouseIndexMessage message) {
+        Long houseId = message.getHouseId();
+        DeleteByQueryRequestBuilder builder = DeleteByQueryAction.INSTANCE
+                .newRequestBuilder(esClient)
+                .filter(QueryBuilders.termQuery(HouseIndexKey.HOUSE_ID, houseId))
+                .source(INDEX_NAME);
+
+        logger.debug("Delete by query for house: " + builder);
+
+        BulkByScrollResponse response = builder.get();
+        long deleted = response.getDeleted();
+        logger.debug("Delete total " + deleted);
+
+        if (deleted <= 0) {
+            this.remove(houseId, message.getRetry() + 1);
+        }
 
     }
 

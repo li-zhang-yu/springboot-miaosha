@@ -7,6 +7,7 @@ import com.github.springbootmiaosha.entity.*;
 import com.github.springbootmiaosha.repository.*;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
+import com.github.springbootmiaosha.service.search.ISearchService;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
 import com.github.springbootmiaosha.web.dto.HouseDetailDTO;
 import com.github.springbootmiaosha.web.dto.HousePictureDTO;
@@ -61,6 +62,9 @@ public class HouseServiceImpl implements IHouseService {
 
     @Autowired
     private IQiNiuService qiNiuService;
+
+    @Autowired
+    private ISearchService searchService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -184,6 +188,10 @@ public class HouseServiceImpl implements IHouseService {
         modelMapper.map(houseForm, house);
         house.setLastUpdateTime(new Date());
         houseRepository.save(house);
+
+        if (house.getStatus() == HouseStatus.PASSES.getValue()) {
+            searchService.index(house.getId());
+        }
 
         return ServiceResult.success();
     }
@@ -332,6 +340,13 @@ public class HouseServiceImpl implements IHouseService {
         }
 
         houseRepository.updateStatus(houseId, status);
+
+        //上架更新索引，其他情况都要删除索引
+        if (status == HouseStatus.PASSES.getValue()){
+            searchService.index(houseId);
+        }else {
+            searchService.remove(houseId);
+        }
         return ServiceResult.success();
     }
 

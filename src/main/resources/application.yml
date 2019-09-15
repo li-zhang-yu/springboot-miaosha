@@ -13,6 +13,7 @@ spring:
    password: root
    driver-class-name: com.mysql.jdbc.Driver
 
+  #模板引擎配置
   thymeleaf:
     prefix: classpath:/templates/
     check-template-location: true
@@ -23,12 +24,21 @@ spring:
       content-type: text/html
     cache: false
 
+  #图片上传配置
   servlet:
     multipart:
       enabled: true #是否开启文件上传支持 默认为true
       location: F:\idea resource code\springboot-miaosha\src\main\resources\temp\ #指定文件上传路径
       max-file-size: 5MB #指定文件大小最大值，默认1MB
       max-request-size: 20MB #指定每次请求的最大值，默认为10MB。由于可能同时上传多个文件，servlet可能会被同时请求，此限制总量。
+
+  #kafka配置
+  kafka:
+    bootstrap-servers: 192.168.10.136:9092
+    consumer:
+      group-id: xunwu
+
+
 
 
 #  redis:

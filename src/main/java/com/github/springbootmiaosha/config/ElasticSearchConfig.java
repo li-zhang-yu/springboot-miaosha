@@ -35,7 +35,7 @@ public class ElasticSearchConfig {
 //         指定集群名,默认为elasticsearch,如果改了集群名,这里一定要加
         Settings settings = Settings.builder()
                 .put("cluster.name", this.esName)
-                .put("client.transport.sniff", true)
+//                .put("client.transport.sniff", true)
                 .build();
 
         TransportClient client = new PreBuiltTransportClient(settings);
