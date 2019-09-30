@@ -36,7 +36,7 @@ spring:
   kafka:
     bootstrap-servers: 192.168.10.136:9092
     consumer:
-      group-id: xunwu
+      group-id: test-consumer-group
 
 
 
