@@ -8,6 +8,7 @@ import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.service.house.IAddressService;
 import com.github.springbootmiaosha.service.house.IHouseService;
+import com.github.springbootmiaosha.service.search.ISearchService;
 import com.github.springbootmiaosha.web.dto.*;
 import com.github.springbootmiaosha.web.form.RentSearch;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,29 @@ public class HouseController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private ISearchService searchService;
+
+    /**
+     * 自动补全接口
+     * @return
+     */
+    @GetMapping("/rent/house/autocomplete")
+    @ResponseBody
+    public ApiResponse autocomplete(@RequestParam(value = "prefix") String prefix) {
+
+        if (prefix.isEmpty()) {
+            return ApiResponse.ofStatus(ApiResponse.Status.BAD_REQUEST);
+        }
+
+//        List<String> result = new ArrayList<>();
+//        result.add("森辉大夏804");
+//        result.add("森辉大夏803");
+        ServiceResult<List<String>> result = searchService.suggest(prefix);
+
+        return ApiResponse.ofSuccess(result.getResult());
+    }
 
     /**
      * 获取支持城市列表
@@ -183,7 +207,8 @@ public class HouseController {
         model.addAttribute("agent", userDTOServiceResult.getResult());
         model.addAttribute("house", houseDTO);
 
-        model.addAttribute("houseCountInDistrict", 0);
+        ServiceResult<Long> aggResult = searchService.aggregataDistrictHouse(city.getEnName(), region.getEnName(), houseDTO.getDistrict());
+        model.addAttribute("houseCountInDistrict", aggResult.getResult());
 
         return "house-detail";
     }

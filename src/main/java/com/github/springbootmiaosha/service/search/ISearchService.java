@@ -1,7 +1,10 @@
 package com.github.springbootmiaosha.service.search;
 
 import com.github.springbootmiaosha.service.ServiceMultiResult;
+import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.form.RentSearch;
+
+import java.util.List;
 
 /**
  * 检索接口
@@ -29,4 +32,21 @@ public interface ISearchService {
      * @return
      */
     ServiceMultiResult<Long> query(RentSearch rentSearch);
+
+    /**
+     * 获取补全建议关键字
+     * @param prefix
+     * @return
+     */
+    ServiceResult<List<String>> suggest(String prefix);
+
+    /**
+     * 聚合特定小区的房间数
+     * @param cityEnName
+     * @param regionEnName
+     * @param district
+     * @return
+     */
+    ServiceResult<Long> aggregataDistrictHouse(String cityEnName, String regionEnName, String district);
+
 }
