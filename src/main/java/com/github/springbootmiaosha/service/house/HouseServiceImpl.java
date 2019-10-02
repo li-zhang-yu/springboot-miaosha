@@ -11,10 +11,7 @@ import com.github.springbootmiaosha.service.search.ISearchService;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
 import com.github.springbootmiaosha.web.dto.HouseDetailDTO;
 import com.github.springbootmiaosha.web.dto.HousePictureDTO;
-import com.github.springbootmiaosha.web.form.DatatableSearch;
-import com.github.springbootmiaosha.web.form.HouseForm;
-import com.github.springbootmiaosha.web.form.PhotoForm;
-import com.github.springbootmiaosha.web.form.RentSearch;
+import com.github.springbootmiaosha.web.form.*;
 import com.google.common.collect.Maps;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -363,6 +360,19 @@ public class HouseServiceImpl implements IHouseService {
         }
 
         return simpleQuery(rentSearch);
+    }
+
+    @Override
+    public ServiceMultiResult<HouseDTO> wholeMapQuery(MapSearch mapSearch) {
+        ServiceMultiResult<Long> serviceResult = searchService.mapQuery(mapSearch.getCityEnName(), mapSearch.getOrderBy(),
+                mapSearch.getOrderDirection(), mapSearch.getStart(), mapSearch.getSize());
+
+        if (serviceResult.getTotal() == 0) {
+            return new ServiceMultiResult<>(0, new ArrayList<>());
+        }
+
+        List<HouseDTO> houses = wrapperHouseResult(serviceResult.getResult());
+        return new ServiceMultiResult<>(serviceResult.getTotal(), houses);
     }
 
     private ServiceMultiResult<HouseDTO> simpleQuery(RentSearch rentSearch) {

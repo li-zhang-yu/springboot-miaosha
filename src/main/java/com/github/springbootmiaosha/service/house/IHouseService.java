@@ -5,6 +5,7 @@ import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.web.dto.HouseDTO;
 import com.github.springbootmiaosha.web.form.DatatableSearch;
 import com.github.springbootmiaosha.web.form.HouseForm;
+import com.github.springbootmiaosha.web.form.MapSearch;
 import com.github.springbootmiaosha.web.form.RentSearch;
 
 /**
@@ -88,5 +89,12 @@ public interface IHouseService {
      * @return
      */
     ServiceMultiResult<HouseDTO> query(RentSearch rentSearch);
+
+    /**
+     * 全地图查询
+     * @param mapSearch
+     * @return
+     */
+    ServiceMultiResult<HouseDTO> wholeMapQuery(MapSearch mapSearch);
 
 }
