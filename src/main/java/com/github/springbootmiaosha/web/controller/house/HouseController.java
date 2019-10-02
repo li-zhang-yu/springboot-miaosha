@@ -8,6 +8,7 @@ import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
 import com.github.springbootmiaosha.service.house.IAddressService;
 import com.github.springbootmiaosha.service.house.IHouseService;
+import com.github.springbootmiaosha.service.search.HouseBucketDTO;
 import com.github.springbootmiaosha.service.search.ISearchService;
 import com.github.springbootmiaosha.web.dto.*;
 import com.github.springbootmiaosha.web.form.RentSearch;
@@ -211,6 +212,37 @@ public class HouseController {
         model.addAttribute("houseCountInDistrict", aggResult.getResult());
 
         return "house-detail";
+    }
+
+    /**
+     * 地图找房
+     * @param cityEnName
+     * @param model
+     * @param session
+     * @param redirectAttributes
+     * @return
+     */
+    @GetMapping("rent/house/map")
+    public String rentMapPage(@RequestParam(value = "cityEnName") String cityEnName, Model model,
+                              HttpSession session, RedirectAttributes redirectAttributes) {
+        ServiceResult<SupportAddressDTO> city = addressService.findCity(cityEnName);
+
+        if (!city.isSuccess()) {
+            redirectAttributes.addAttribute("msg", "must_chose_city");
+            return "redirect:/index";
+        }else {
+            session.setAttribute("cityName", cityEnName);
+            model.addAttribute("city", city.getResult());
+        }
+
+        ServiceMultiResult<SupportAddressDTO> regions = addressService.findAllRegionsByCityName(cityEnName);
+
+        ServiceMultiResult<HouseBucketDTO> serviceResult = searchService.mapAggregate(cityEnName);
+
+        model.addAttribute("aggData", serviceResult.getResult());
+        model.addAttribute("total", serviceResult.getTotal());
+        model.addAttribute("regions", regions.getResult());
+        return "rent-map";
     }
 
 }
