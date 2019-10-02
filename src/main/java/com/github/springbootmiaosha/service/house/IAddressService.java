@@ -3,6 +3,7 @@ package com.github.springbootmiaosha.service.house;
 import com.github.springbootmiaosha.entity.SupportAddress;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
+import com.github.springbootmiaosha.service.search.BaiduMapLocation;
 import com.github.springbootmiaosha.web.dto.SubwayDTO;
 import com.github.springbootmiaosha.web.dto.SubwayStationDTO;
 import com.github.springbootmiaosha.web.dto.SupportAddressDTO;
@@ -73,5 +74,13 @@ public interface IAddressService {
      * @return
      */
     ServiceResult<SupportAddressDTO> findCity(String cityEnName);
+
+    /**
+     * 根据城市以及具体地位获取百度地图的经纬度
+     * @param city
+     * @param address
+     * @return
+     */
+    ServiceResult<BaiduMapLocation> getBaiduMapLocation(String city, String address);
 
 }

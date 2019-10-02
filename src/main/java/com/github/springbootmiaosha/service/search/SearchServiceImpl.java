@@ -8,11 +8,14 @@ import com.github.springbootmiaosha.base.RentValueBlock;
 import com.github.springbootmiaosha.entity.House;
 import com.github.springbootmiaosha.entity.HouseDetail;
 import com.github.springbootmiaosha.entity.HouseTag;
+import com.github.springbootmiaosha.entity.SupportAddress;
 import com.github.springbootmiaosha.repository.HouseDetailRepository;
 import com.github.springbootmiaosha.repository.HouseRepository;
 import com.github.springbootmiaosha.repository.HouseTagRepository;
+import com.github.springbootmiaosha.repository.SupportAddressRepository;
 import com.github.springbootmiaosha.service.ServiceMultiResult;
 import com.github.springbootmiaosha.service.ServiceResult;
+import com.github.springbootmiaosha.service.house.IAddressService;
 import com.github.springbootmiaosha.web.form.RentSearch;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
@@ -88,6 +91,12 @@ public class SearchServiceImpl implements ISearchService {
 
     @Autowired
     private HouseTagRepository houseTagRepository;
+
+    @Autowired
+    private SupportAddressRepository supportAddressRepository;
+
+    @Autowired
+    private IAddressService addressService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -293,6 +302,19 @@ public class SearchServiceImpl implements ISearchService {
         if (detail == null) {
             //异常情况
         }
+
+        SupportAddress city = supportAddressRepository.findByEnNameAndLevel(house.getCityEnName(), SupportAddress.Level.CITY.getValue());
+        SupportAddress region = supportAddressRepository.findByEnNameAndLevel(house.getRegionEnName(), SupportAddress.Level.REGION.getValue());
+
+        String address = city.getCnName() + region.getCnName() + house.getStreet() + house.getDistrict() + detail.getDetailAddress();
+
+        ServiceResult<BaiduMapLocation> location = addressService.getBaiduMapLocation(city.getCnName(), address);
+
+        if (!location.isSuccess()) {
+            this.index(message.getHouseId(), message.getRetry() + 1);
+            return;
+        }
+        indexTemplate.setLocation(location.getResult());
 
         List<HouseTag> tags = houseTagRepository.findAllByHouseId(houseId);
         if (tags != null && !tags.isEmpty()) {
